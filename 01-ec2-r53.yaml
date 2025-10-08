@@ -1,0 +1,27 @@
+- name: Creating ec2 instances and updating r53
+  hosts: local
+  connection: local
+  vars:
+    ami_id: ami-09c813fb71547fc4f
+    sg_id: sg-08e9a23d01ec385fb
+    zone_id: "AKIA4LBEIRKJTVI5436R"  # AWS zone id which we created in IAM
+    domine_name: rajkumardaws.space
+    instances:
+    - mongodb
+    - redis
+    - mysql
+  tasks:
+  - name: create ec2 instances
+    amazon.aws.ec2_instance:
+      name: "{{ item }}"
+      instance_type: t3.micro
+      security_group: "{{ sg_id }}"
+      image_id: "{{ ami_id }}"
+      tag:
+      name: "{{ item }}"
+    loop: "{{ instances }}"
+    register: ec2_output
+  - name: print the ec2 ec2_output
+  
+
+
