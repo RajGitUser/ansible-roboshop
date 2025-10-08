@@ -22,4 +22,4 @@
     ansible.builtin.service:
       name: mongod
       state: started
-      enabeld: yes
+      enabled: yes
