@@ -40,7 +40,7 @@
       record: "{{ item.item }}.{{ domine_name }}"  #mongodb.rajkumardaws.space
       type: A
       ttl: 1
-      value: "{{ item.instances[0].public_ip_address }}"
+      value: "{{ item.instances[0].private_ip_address }}"
       overwrite: true
     loop: "{{ ec2_output.results }}"
 
