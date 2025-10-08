@@ -8,8 +8,6 @@
     domine_name: rajkumardaws.space
     instances:
     - mongodb
-    - redis
-    - mysql
   tasks:
   - name: create ec2 instances
     amazon.aws.ec2_instance:
@@ -22,6 +20,6 @@
     loop: "{{ instances }}"
     register: ec2_output
   - name: print the ec2 ec2_output
-  
+
 
 
