@@ -37,7 +37,7 @@
     amazon.aws.route53:
       state: present
       zone: "{{ domine_name }}"
-      record: "{{ item.item }}. {{ domine_name }}"  #mongodb.rajkumardaws.space
+      record: "{{ item.item }}.{{ domine_name }}"  #mongodb.rajkumardaws.space
       type: A
       ttl: 1
       value: "{{ item.instances[0].public_ip_address }}"
