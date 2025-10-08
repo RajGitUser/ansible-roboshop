@@ -10,7 +10,7 @@
   - name: install mongodb server
     ansible.builtin.package:
       name: mongodb-org
-      state: start
+      state: present
 
   - name: allow remote connections
     ansible.builtin.replace:
