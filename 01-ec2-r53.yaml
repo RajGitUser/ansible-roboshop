@@ -7,11 +7,12 @@
     zone_id: "AKIA4LBEIRKJTVI5436R"  # AWS zone id which we created in IAM
     domine_name: rajkumardaws.space
     instances:
-    - mongodb
-    - redis
-    - mysql
-    - rabbitmq
-    
+    # we can pass instances through command line using -e
+    # - mongodb
+    # - redis
+    # - mysql
+    # - rabbitmq
+
   tasks:
   - name: create ec2 instances
     amazon.aws.ec2_instance:
