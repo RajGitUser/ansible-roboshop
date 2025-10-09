@@ -74,8 +74,9 @@
     ansible.builtin.shell: mongosh --host mongodb.rajkumardaws.space </app/db/master-data.js
     when: catalogue_output.stdout | int < 0
   
-  - name: stat the catalogue service
-    ansible.builtin.service:
+  - name: daemon reload enable and start
+    ansible.builtin.systemd_service:
       name: catalogue
+      enabled: true
       state: started
-      enabled: yes
+      daemon_reload: true
