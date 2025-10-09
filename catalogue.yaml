@@ -62,7 +62,7 @@
       name: mongodb-mongosh
       state: present
   - name: connnect to mongodb catalogue
-    ansible.builtin.command: mongosh mongodb.daws86s.fun --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')"
+    ansible.builtin.command: mongosh mongodb.rajkumardaws.space --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')"
     register: catalogue_output
   
   # - name: evaluate catalogue ec2_output
