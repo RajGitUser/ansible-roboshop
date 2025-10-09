@@ -1,0 +1,65 @@
+- name: setup catalogue server
+  hosts: catalogue
+  become: yes
+  tasks:
+  - name: disable the default nodejs
+    ansible.builtin.command: dnf module disable nodejs -y
+  - name: enable nodejs 20
+    ansible.builtin.command: dnf module enable nodejs:20 -y
+  - name: install nodejs
+    ansible.builtin.package:
+      name: nodejs
+      state: present
+  - name: create user
+    ansible.builtin.user:
+      user: roboshop
+      comment: Roboshop system user
+      system: true
+      shell: /sbin/nologin
+      home: /app
+  - name: create a directory
+    ansible.builtin.file:
+      state: directory
+      path: /app
+  - name: download catalogue application
+    ansible.builtin.get_url:
+    url: https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
+    dest: /tmp/catalogue.zip
+  - name: unzip the application file
+    ansible.builtin.unarchive:
+      src: /tmp/catalogue.zip
+      dest: /app
+      remote_src: yes
+  - name: install dipendencies
+    community.general.npm:
+      path: /app
+      
+  - name: copy the catalogue service file
+    ansible.builtin.copy:
+      src: catalogue.service
+      dest: /etc/systemd/system/catalogue.service
+
+  - name: copy mongo repo
+    ansible.builtin.copy:
+      src: mongo.repo
+      dest: /etc/yum.repos.d/mongo.repo
+
+  - name: install the mongodb
+    ansible.builtin.package:
+      name: mongodb
+      state: present
+  
+  # - name: evaluate catalogue ec2_output
+  #   community.mongodb.mongodb_shell:
+  #     eval: db.getMongo().getDBNames().indexOf('catalogue')
+  #   register: catalogue_output
+  
+  - name: load products into mongodb
+    ansible.builtin.shell: mongosh --host mongodb.daws86s.fun </app/db/master-data.js
+    when: catalogue_output.stdout | int < 0
+  
+  - name: stat the catalogue service
+    ansible.builtin.service:
+      name: catalogue
+      state: started
+      enabled: yes
