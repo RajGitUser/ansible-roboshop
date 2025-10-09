@@ -59,7 +59,7 @@
 
   - name: install the mongodb
     ansible.builtin.package:
-      name: mongodb
+      name: mongodb-mongosh
       state: present
   
   # - name: evaluate catalogue ec2_output
