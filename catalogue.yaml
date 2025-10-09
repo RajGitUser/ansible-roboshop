@@ -17,14 +17,27 @@
       system: true
       shell: /sbin/nologin
       home: /app
+  
+  - name: remove app directory
+    ansible.builtin.file:
+      path: /app
+      state: absent
+
   - name: create a directory
     ansible.builtin.file:
       state: directory
       path: /app
+  
+  - name: Delete catalogue file
+    ansible.builtin.file:
+      path: /tmp/catalogue.zip
+      state: absent
+
   - name: download catalogue application
     ansible.builtin.get_url:
-    url: https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
-    dest: /tmp/catalogue.zip
+      url: https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
+      dest: /tmp/catalogue.zip
+
   - name: unzip the application file
     ansible.builtin.unarchive:
       src: /tmp/catalogue.zip
@@ -33,7 +46,7 @@
   - name: install dipendencies
     community.general.npm:
       path: /app
-      
+
   - name: copy the catalogue service file
     ansible.builtin.copy:
       src: catalogue.service
