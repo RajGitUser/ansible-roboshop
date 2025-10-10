@@ -61,7 +61,7 @@
     ansible.builtin.command: mv target/shipping-1.0.jar shipping.jar
     args:
       chdir: /app
-      
+
   - name: copy shipping service
     ansible.builtin.copy:
       src: shipping.service
@@ -73,7 +73,7 @@
       name: all
       login_host: mysql.rajkumardaws.space
       login_user: root
-      login_password: roboshop@1
+      login_password: RoboShop@1
       target: "{{ item }}"
     loop:
     - /app/db/schema.sql
