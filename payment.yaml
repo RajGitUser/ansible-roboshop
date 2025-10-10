@@ -51,7 +51,7 @@
       chdir: /app
   - name: copy payment service file
     ansible.builtin.copy:
-      scr: payment.service
+      src: payment.service
       dest: /etc/systemd/system/payment.service
 
   - name: daemon reload enable and start
