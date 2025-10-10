@@ -9,7 +9,7 @@
     ansible.builtin.command: dnf module enable nginx:1.24 -y
 
   - name: install nginx
-    ansible.builtin.command: dnf install nginx -yes
+    ansible.builtin.command: dnf install nginx -y
   
   - name: remove default html directory
     ansible.builtin.file:
