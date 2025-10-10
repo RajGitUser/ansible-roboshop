@@ -1,5 +1,5 @@
 - name: setup shipping server
-  host: shipping
+  hosts: shipping
   become: yes
   tasks:
   - name: install items
