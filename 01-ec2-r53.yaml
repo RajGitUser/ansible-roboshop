@@ -38,6 +38,7 @@
   #   ansible.builtin.debug: 
   #     msg: "{{ item.instances[0].private_ip_address }}"
   #   loop: "{{ ec2_output.results }}"
+
   - name: create route53 record
     amazon.aws.route53:
       state: present
@@ -47,6 +48,18 @@
       ttl: 1
       value: "{{ item.instances[0].private_ip_address }}"
       overwrite: true
+    loop: "{{ ec2_output.results }}"
+  
+  - name: create route53 record for frontend
+    amazon.aws.route53:
+      state: present
+      zone: "{{ domine_name }}"
+      record: "{{ domine_name }}"  #rajkumardaws.space
+      type: A
+      ttl: 1
+      value: "{{ item.instances[0].public_ip_address }}"
+      overwrite: true
+    when: item.item == "frontend"
     loop: "{{ ec2_output.results }}"
 
 

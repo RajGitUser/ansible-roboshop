@@ -1,0 +1,85 @@
+- name: setup shipping server
+  host: shipping
+  become: yes
+  tasks:
+  - name: install items
+    ansible.builtin.dnf:
+      name: "{{ item }}"
+      state: present
+    loop:
+    - maven
+    - mysql
+  - name: install mysql python libraries
+    ansible:builtin.pip:
+      executable: pip3.9
+      name: "{{ item }}"
+    loop:
+    - PyMySQL
+    - cryptography
+
+  - name: create user
+    ansible.builtin.user:
+      user: roboshop
+      comment: Roboshop system user
+      system: true
+      shell: /sbin/nologin
+      home: /app
+  
+  - name: remove app directory
+    ansible.builtin.file:
+      path: /app
+      state: absent
+
+  - name: create a directory
+    ansible.builtin.file:
+      state: directory
+      path: /app
+  
+  - name: Delete shipping file
+    ansible.builtin.file:
+      path: /tmp/shipping.zip
+      state: absent
+
+  - name: download shipping application
+    ansible.builtin.get_url:
+      url: https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip
+      dest: /tmp/shipping.zip
+
+  - name: unzip the application file
+    ansible.builtin.unarchive:
+      src: /tmp/shipping.zip
+      dest: /app
+  
+  - name: download the dipendencies
+    ansible.builtin.command: mvn clean package
+    args:
+      chdir: /app
+  
+  - name: rename the file
+    ansible.builtin.command: mv target/shipping-1.0.jar shipping.jar
+
+  - name: copy shipping service
+    ansible.builtin.copy:
+      src: shipping.service
+      dest: /etc/systemd/system/shipping.service
+
+  - name: import shipping data into mysql
+    community.mysql.mysql_bd:
+      state: import
+      name: all
+      login_host: mysql.rajkumardaws.space
+      login_user: root
+      login_password: roboshop@1
+      target: "{{ item }}"
+    loop:
+    - /app/db/schema.sql
+    - /app/db/app-user.sql
+    - /app/db/master-data.sql
+    
+  - name: daemon reload enable and start
+    ansible.builtin.systemd_service:
+      name: shipping
+      enabled: true
+      state: started
+      daemon_reload: true
+
