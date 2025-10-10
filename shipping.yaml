@@ -9,6 +9,7 @@
     loop:
     - maven
     - mysql
+
   - name: install mysql python libraries
     ansible.builtin.pip:
       executable: pip3.9
@@ -58,7 +59,9 @@
   
   - name: rename the file
     ansible.builtin.command: mv target/shipping-1.0.jar shipping.jar
-
+    args:
+      chdir: /app
+      
   - name: copy shipping service
     ansible.builtin.copy:
       src: shipping.service
