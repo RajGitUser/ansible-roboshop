@@ -10,7 +10,7 @@
     ansible.builtin.package:
       name: nodejs
       state: present
-      
+
   - name: create user
     ansible.builtin.user:
       user: roboshop
@@ -44,6 +44,7 @@
       src: /tmp/catalogue.zip
       dest: /app
       remote_src: yes
+      
   - name: install dipendencies
     community.general.npm:
       path: /app

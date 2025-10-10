@@ -46,11 +46,17 @@
   - name: install dipendencies
     ansible.builtin.pip:
       requirements: requirements.txt
-      executable: 3.9
+      executable: pip3.9
     args:
       chdir: /app
   - name: copy payment service file
     ansible.builtin.copy:
       scr: payment.service
       dest: /etc/systemd/system/payment.service
-  
+
+  - name: daemon reload enable and start
+    ansible.builtin.systemd_service:
+      name: payment
+      enabled: true
+      state: started
+      daemon_reload: true
